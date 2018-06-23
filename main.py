@@ -11,34 +11,17 @@ list;
 
 # Added 2 more arguments because Muse Direct sends 8 arguments
 def eeg_handler(unused_addr, args, ch1, ch2, ch3, ch4, num1, num2):
-    # bundle = osc_bundle_builder.OscBundleBuilder(
-        # osc_bundle_builder.IMMEDIATELY)
-    # msg = osc_message_builder.OscMessageBuilder(address="/SYNC")
-    # msg.add_arg(ch1)
-    # # Add 4 messages in the bundle, each with more arguments.
-    # bundle.add_content(msg.build())
-    # msg.add_arg(ch2)
-    # bundle.add_content(msg.build())
-    # msg.add_arg(ch3)
-    # bundle.add_content(msg.build())
-    # msg.add_arg(ch4)
-    # bundle.add_content(msg.build())
-
-    # sub_bundle = bundle.build()
-    # # Now add the same bundle inside itself.
-    # bundle.add_content(sub_bundle)
-    # # The bundle has 5 elements in total now.
-
-    # bundle = bundle.build()
-    # # You can now send it via a client as described in other examples.
     
     print("EEG (uV) per channel: ", ch1, ch2, ch3, ch4, num1, num2)
     
     list = [ch1, ch2, ch3, ch4]
     print(list)
     
-    # Send OSC to /laura/eeg
-    client.send_message("/laura/eeg", list)
+    # Send OSC to /muse/eeg
+    client.send_message("/muse/eeg/ch1", int(ch1))
+    client.send_message("/muse/eeg/ch2", int(ch2))
+    client.send_message("/muse/eeg/ch3", int(ch3))
+    client.send_message("/muse/eeg/ch4", int(ch4))
     
 
 if __name__ == "__main__":
