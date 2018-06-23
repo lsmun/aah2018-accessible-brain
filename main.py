@@ -7,21 +7,23 @@ from pythonosc import osc_server
 from pythonosc import udp_client
 from pythonosc import osc_message_builder
 
-list;
-
-# Added 2 more arguments because Muse Direct sends 8 arguments
 def eeg_handler(unused_addr, args, ch1, ch2, ch3, ch4, num1, num2):
-    
-    print("EEG (uV) per channel: ", ch1, ch2, ch3, ch4, num1, num2)
-    
-    list = [ch1, ch2, ch3, ch4]
-    print(list)
+    # print("EEG (uV) per channel: ", ch1, ch2, ch3, ch4, num1, num2)
     
     # Send OSC to /muse/eeg
     client.send_message("/muse/eeg/ch1", int(ch1))
     client.send_message("/muse/eeg/ch2", int(ch2))
     client.send_message("/muse/eeg/ch3", int(ch3))
     client.send_message("/muse/eeg/ch4", int(ch4))
+
+def acc_handler(unused_addr, args, x, y, z):
+    print("Acc ", x, y, z)
+    
+    # Send OSC to /muse/eeg
+    #client.send_message("/muse/eeg/ch1", int(ch1))
+    #client.send_message("/muse/eeg/ch2", int(ch2))
+    #client.send_message("/muse/eeg/ch3", int(ch3))
+    #client.send_message("/muse/eeg/ch4", int(ch4))
     
 
 if __name__ == "__main__":
@@ -31,23 +33,29 @@ if __name__ == "__main__":
                         help="The ip to listen on")
     parser.add_argument("--port",
                         type=int,
-                        # Changed port to match Muse Direct
+                        # Port number on Muse Direct to listen from
                         default=9000,
                         help="The port to listen on")
     parser.add_argument("--send",
                         type=int,
-                        # Changed port to match Muse Direct
+                        # Port number to send data to
                         default=8000,
-                        help="The port to send to")
+                        help="The port to send data")
     args = parser.parse_args()
     
-    # Send shit to Max
+    # Send data to Max
     client = udp_client.SimpleUDPClient(args.ip, args.send)
-
     dispatcher = dispatcher.Dispatcher()
-    dispatcher.map("/debug", print)
-    # Fixed path
+    
+    # Set paths
+    # Arguments: OSC Path, function, idk
     dispatcher.map("/eeg", eeg_handler, "EEG")
+    dispatcher.map("/acc", acc_handler, "ACC")
+    dispatcher.map("/elements/delta_session_score", delta_handler, "DELTA")
+    dispatcher.map("/elements/theta_session_score", theta_handler, "THETA")
+    dispatcher.map("/elements/alpha_session_score", alpha_handler, "ALPHA")
+    dispatcher.map("/elements/beta_session_score", beta_handler, "BETA")
+    dispatcher.map("/elements/gamma_session_score", gamma_handler, "GAMMA")
     
     server = osc_server.ThreadingOSCUDPServer(
         (args.ip, args.port), dispatcher)
