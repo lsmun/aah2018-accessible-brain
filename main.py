@@ -47,7 +47,7 @@ if __name__ == "__main__":
     dispatcher = dispatcher.Dispatcher()
     dispatcher.map("/debug", print)
     # Fixed path
-    dispatcher.map("/max/eeg", eeg_handler, "EEG")
+    dispatcher.map("/eeg", eeg_handler, "EEG")
     
     server = osc_server.ThreadingOSCUDPServer(
         (args.ip, args.port), dispatcher)
