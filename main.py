@@ -24,7 +24,6 @@ def acc_handler(unused_addr, args, x, y, z):
     #client.send_message("/muse/eeg/ch2", int(ch2))
     #client.send_message("/muse/eeg/ch3", int(ch3))
     #client.send_message("/muse/eeg/ch4", int(ch4))
-    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -51,11 +50,7 @@ if __name__ == "__main__":
     # Arguments: OSC Path, function, idk
     dispatcher.map("/eeg", eeg_handler, "EEG")
     dispatcher.map("/acc", acc_handler, "ACC")
-    dispatcher.map("/elements/delta_session_score", delta_handler, "DELTA")
-    dispatcher.map("/elements/theta_session_score", theta_handler, "THETA")
-    dispatcher.map("/elements/alpha_session_score", alpha_handler, "ALPHA")
-    dispatcher.map("/elements/beta_session_score", beta_handler, "BETA")
-    dispatcher.map("/elements/gamma_session_score", gamma_handler, "GAMMA")
+    dispatcher.map("/elements/blink", blink_handler, "BLINK")
     
     server = osc_server.ThreadingOSCUDPServer(
         (args.ip, args.port), dispatcher)
