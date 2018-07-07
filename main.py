@@ -8,12 +8,13 @@ from pythonosc import udp_client
 from pythonosc import osc_message_builder
 
 # Maps EEG data to a range between 0 and 255. This function uses the affine transformation.
-# From Muse website: range of raw EEG data is 0.0 - 1682.815 uV
 # oldValue = EEG data from Muse
 def eeg_tranform(oldValue):
     # Formula: (((oldValue - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin
     return (((oldValue - 0) * (255 - 0)) / (1683 - 0)) + 0
-
+    
+# Sends raw EEG data to /muse/eeg/raw and transformed EEG data to /muse/eeg/transformed.
+# ch1-ch4: a value between 0.0 - 1682.815 uV
 def eeg_handler(unused_addr, args, ch1, ch2, ch3, ch4, num1, num2):
     # Send raw EEG data to /muse/eeg/raw
     client.send_message("/muse/eeg/raw", [int(ch1), int(ch2), int(ch3), int(ch4)])
@@ -30,7 +31,7 @@ def acc_handler(unused_addr, args, x, y, z):
     #client.send_message("/muse/eeg/ch3", int(ch3))
     #client.send_message("/muse/eeg/ch4", int(ch4))
     
-# Sends blink data to "/muse/blink". Blink data senses whether or not user has blinked.
+# Sends blink data to /muse/blink. Blink data senses whether or not user has blinked.
 # blink: 1 if blinking otherwise 0
 def blink_handler(unused_addr, args, blink):
     client.send_message("/muse/blink", int(blink))
