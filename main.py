@@ -19,7 +19,7 @@ def eeg_tranform(oldValue):
 # return: int
 def acc_tranform(oldValue):
     # Add 1 to oldValue to force the old range to be 0 - 2 in order to avoid negative cases
-    oldValue++
+    oldValue += 1
 
     # Formula: (((oldValue - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin
     return int((((oldValue - 0) * (179 - 0)) / (2 - 0)) + 0)
@@ -28,7 +28,7 @@ def acc_tranform(oldValue):
 # ch1, ch2, ch3, ch4: a value between 0.0 - 1682.815 uV
 # return: none
 # sends client a list of 4 integers
-def eeg_handler(unused_addr, args, ch1, ch2, ch3, ch4, num1, num2):
+def eeg_handler(unused_addr, ch1, ch2, ch3, ch4, num1, num2):
     # Send raw EEG data to /muse/eeg/raw
     client.send_message("/muse/eeg/raw", [int(ch1), int(ch2), int(ch3), int(ch4)])
     
@@ -39,32 +39,33 @@ def eeg_handler(unused_addr, args, ch1, ch2, ch3, ch4, num1, num2):
 # x, y, z: a value between -1 and 1
 # return: none
 # sends client a list of 3 floats or integers
-def acc_handler(unused_addr, args, x, y, z):
+def acc_handler(unused_addr, x, y, z):
     # If values are less than -1, force values to become -1. If values are greater than 1, force values to become 1.
     if x < -1:
         x = -1
-    elif x > 1
+    elif x > 1:
         x = 1
     
     if y < -1:
         y = -1
-    elif y > 1
+    elif y > 1:
         y = 1
     
     if z < -1:
         z = -1
-    elif z > 1
+    elif z > 1:
         z = 1
 
     # Send raw accelerometer data to /muse/acc/raw
     client.send_message("/muse/acc/raw", [x, y, z])
+    #print([x, y, z])
     
     # Send transformed accelerometer data to /muse/acc/transformed
-    client.send_message("/muse/acc/transformed", [acc_tranform(x), acc_tranform(y), acc_tranform(z))
+    client.send_message("/muse/acc/transformed", [acc_tranform(x), acc_tranform(y), acc_tranform(z)])
     
 # Sends blink data to /muse/blink. Blink data senses whether or not user has blinked.
 # blink: 1 if blinking otherwise 0
-def blink_handler(unused_addr, args, blink):
+def blink_handler(unused_addr, blink):
     client.send_message("/muse/blink", int(blink))
 
 if __name__ == "__main__":
