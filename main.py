@@ -7,14 +7,19 @@ from pythonosc import osc_server
 from pythonosc import udp_client
 from pythonosc import osc_message_builder
 
+# Maps EEG data to a range between 0 and 255. This function uses the affine transformation.
+# From Muse website: range of raw EEG data is 0.0 - 1682.815 uV
+# oldValue = EEG data from Muse
+def eeg_tranform(oldValue):
+    # Formula: (((oldValue - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin
+    return (((oldValue - 0) * (255 - 0)) / (1683 - 0)) + 0
+
 def eeg_handler(unused_addr, args, ch1, ch2, ch3, ch4, num1, num2):
-    # print("EEG (uV) per channel: ", ch1, ch2, ch3, ch4, num1, num2)
+    # Send raw EEG data to /muse/eeg/raw
+    client.send_message("/muse/eeg/raw", [int(ch1), int(ch2), int(ch3), int(ch4)])
     
-    # Send OSC to /muse/eeg
-    client.send_message("/muse/eeg/ch1", int(ch1))
-    client.send_message("/muse/eeg/ch2", int(ch2))
-    client.send_message("/muse/eeg/ch3", int(ch3))
-    client.send_message("/muse/eeg/ch4", int(ch4))
+    # Send transformed EEG data to /muse/eeg/transformed
+    client.send_message("/muse/eeg/transformed", [int(eeg_tranform(ch1)), int(eeg_tranform(ch2)), int(eeg_tranform(ch3)), int(eeg_tranform(ch4))])
 
 def acc_handler(unused_addr, args, x, y, z):
     print("Acc ", x, y, z)
