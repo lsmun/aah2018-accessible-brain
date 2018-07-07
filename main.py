@@ -47,10 +47,10 @@ if __name__ == "__main__":
     dispatcher = dispatcher.Dispatcher()
     
     # Set paths
-    # Arguments: OSC Path, function, idk
-    dispatcher.map("/eeg", eeg_handler, "EEG")
-    dispatcher.map("/acc", acc_handler, "ACC")
-    dispatcher.map("/elements/blink", blink_handler, "BLINK")
+    # Arguments: address, handler, args
+    dispatcher.map("/eeg", eeg_handler)
+    dispatcher.map("/acc", acc_handler)
+    dispatcher.map("/elements/blink", blink_handler)
     
     server = osc_server.ThreadingOSCUDPServer(
         (args.ip, args.port), dispatcher)
