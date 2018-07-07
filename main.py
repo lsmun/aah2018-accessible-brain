@@ -30,7 +30,7 @@ def acc_tranform(oldValue):
 # sends client a list of 4 integers
 def eeg_handler(unused_addr, ch1, ch2, ch3, ch4, num1, num2):
     # Send raw EEG data to /muse/eeg/raw
-    client.send_message("/muse/eeg/raw", [int(ch1), int(ch2), int(ch3), int(ch4)])
+    #client.send_message("/muse/eeg/raw", [int(ch1), int(ch2), int(ch3), int(ch4)])
     
     # Send transformed EEG data to /muse/eeg/transformed
     client.send_message("/muse/eeg/transformed", [eeg_tranform(ch1), eeg_tranform(ch2), eeg_tranform(ch3), eeg_tranform(ch4)])
@@ -57,7 +57,7 @@ def acc_handler(unused_addr, x, y, z):
         z = 1
 
     # Send raw accelerometer data to /muse/acc/raw
-    client.send_message("/muse/acc/raw", [x, y, z])
+    #client.send_message("/muse/acc/raw", [x, y, z])
     #print([x, y, z])
     
     # Send transformed accelerometer data to /muse/acc/transformed
