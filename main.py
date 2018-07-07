@@ -42,7 +42,7 @@ if __name__ == "__main__":
                         help="The port to listen on")
     parser.add_argument("--send",
                         type=int,
-                        # Port number to send data to
+                        # Port number on Max to send data to
                         default=8000,
                         help="The port to send data")
     args = parser.parse_args()
@@ -51,12 +51,13 @@ if __name__ == "__main__":
     client = udp_client.SimpleUDPClient(args.ip, args.send)
     dispatcher = dispatcher.Dispatcher()
     
-    # Set paths
-    # Arguments: address, handler, args
+    # Receive data from Muse
+    # Arguments: address, handler, args (optional)
     dispatcher.map("/eeg", eeg_handler)
     dispatcher.map("/acc", acc_handler)
     dispatcher.map("/elements/blink", blink_handler)
     
+    # Set up server
     server = osc_server.ThreadingOSCUDPServer(
         (args.ip, args.port), dispatcher)
     print("Serving on {}".format(server.server_address))
