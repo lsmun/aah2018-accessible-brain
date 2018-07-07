@@ -24,6 +24,11 @@ def acc_handler(unused_addr, args, x, y, z):
     #client.send_message("/muse/eeg/ch2", int(ch2))
     #client.send_message("/muse/eeg/ch3", int(ch3))
     #client.send_message("/muse/eeg/ch4", int(ch4))
+    
+# Sends blink data to "/muse/blink". Blink data senses whether or not user has blinked.
+# blink: 1 if blinking otherwise 0
+def blink_handler(unused_addr, args, blink):
+    client.send_message("/muse/blink", int(blink))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
